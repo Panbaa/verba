@@ -17,4 +17,6 @@ RUN set -eux; \
 	chmod 755 "$PNPM_HOME"; \
 	pnpm config set global-bin-dir "$PNPM_HOME"; \
 	pnpm add -g opencode-ai@latest @fission-ai/openspec@latest; \
+	ln -sf "$PNPM_HOME/opencode" /usr/local/bin/opencode; \
+	ln -sf "$PNPM_HOME/openspec" /usr/local/bin/openspec; \
 	rm -rf /var/lib/apt/lists/*

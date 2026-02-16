@@ -5,10 +5,27 @@
     "context": ".."
   },
   "remoteUser": "vscode",
+  "remoteEnv": {
+    "PNPM_HOME": "/usr/local/share/pnpm",
+    "PATH": "/usr/local/share/pnpm:${containerEnv:PATH}"
+  },
+  "postStartCommand": "nohup bash -c 'openspec init --tools opencode' > /dev/null 2>&1 &"
   "customizations": {
     "vscode": {
       "settings": {
-        "terminal.integrated.defaultProfile.linux": "bash"
+        "terminal.integrated.defaultProfile.linux": "OpenCode",
+        "terminal.integrated.profiles.linux": {
+          "OpenCode": {
+            "path": "bash",
+            "args": [
+              "-lc",
+              "opencode run \"/connect github copilot\""
+            ]
+          },
+          "bash": {
+            "path": "bash"
+          }
+        }
       }
     }
   }
