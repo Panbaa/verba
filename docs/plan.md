@@ -123,7 +123,18 @@ The router should operate at the `LLMClient` level so the assistant can later sw
 
 Initial:
 
-* Local Whisper (whisper.cpp or faster-whisper)
+* Local faster-whisper as the default MVP STT backend
+
+Why this choice:
+
+* Local-first and commercially plausible with license review of both code and model assets
+* Easier to integrate into the current Python service architecture than whisper.cpp
+* Good speed and accuracy tradeoff for the MVP
+
+Planned next step:
+
+* Implement a `SpeechTranscriber` service backed by faster-whisper
+* Keep STT swappable behind the existing protocol so a different local backend or a custom STT can be added later without redesigning the app
 
 ---
 
@@ -188,7 +199,8 @@ Tech options:
 ### Phase 2: Voice Input
 
 * Record audio
-* Convert speech → text
+* Convert speech → text with faster-whisper
+* Expose transcription progress and failure states in the UI
 
 ---
 
@@ -258,6 +270,12 @@ assistant/
 ### Latency
 
 * STT + LLM + TTS must be fast
+
+### Current Direction
+
+* Recording and silence detection are implemented
+* The next implementation session should focus on integrating faster-whisper into the `SpeechTranscriber` boundary
+* Do not couple the UI directly to faster-whisper specific code; keep the backend behind the protocol layer
 * Consider streaming later
 
 ### Linux System Integration

@@ -16,6 +16,14 @@ This document captures the locked MVP architecture decisions from step 2 of the 
 - Trigger source: manual trigger first, global hotkey second behind the same abstraction
 - TTS: interface locked now, concrete backend only after the exact engine and voice asset pass the license whitelist
 
+## Current Implementation Status
+
+- Manual trigger is implemented
+- Tkinter UI is implemented
+- Local microphone recording is implemented
+- Silence-based endpoint detection and live recorder diagnostics are implemented
+- STT interface is prepared, but the concrete faster-whisper transcriber is still the next step
+
 ## Core Runtime Types
 
 - `AudioChunk`: raw mono PCM audio plus sample rate metadata
@@ -118,6 +126,12 @@ The orchestrator is the only component allowed to coordinate a full assistant tu
 - Prevents overlapping runs
 - Keeps all backends swappable without changing orchestration logic
 - Depends only on interfaces, not on backend-specific implementation details
+
+## STT Implementation Rule
+
+- The first concrete `SpeechToText` implementation should use faster-whisper
+- The orchestrator and UI must not depend on faster-whisper directly
+- If the project later switches to whisper.cpp, Vosk, or a custom STT backend, only the transcriber implementation should need to change
 
 ## LLM Backend Rule
 

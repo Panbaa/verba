@@ -8,6 +8,11 @@ Recommended stack for the first pass:
 5. Tkinter for the popup UI.
 6. A local TTS engine only after both the engine and the exact voice/model asset are verified as commercially usable under a permissive license.
 
+## Current Snapshot
+1. Manual trigger, Tkinter UI, local recording, silence detection, and recorder diagnostics are implemented.
+2. The next session should integrate faster-whisper behind the existing `SpeechTranscriber` service boundary.
+3. Keep the transcriber swappable so the project can later move to another local backend or a custom STT implementation without changing the app flow.
+
 ## Next Days
 1. ~~Day 1: create a license whitelist before coding anything substantial. Audit every package, model, and voice asset you might use, because the TTS voice/model license is the easiest place to accidentally break your commercial-use requirement.~~
 2. ~~Day 1: lock the MVP stack and define the interfaces for recorder, STT, LLM, TTS, UI, and trigger source.~~
@@ -26,9 +31,15 @@ Recommended stack for the first pass:
 2. Avoid Qt for the first MVP because you asked for MIT/Apache/BSD-only dependencies.
 3. Treat model files and TTS voice assets as first-class dependencies, not just the Python packages around them.
 4. Keep the MVP to one local conversation flow only. No memory, plugins, multi-agent routing, or cross-platform work yet.
+5. Use faster-whisper as the first real STT implementation, but keep it behind the `SpeechTranscriber` protocol so it is an implementation choice, not an architectural dependency.
 
 ## Main Risk
 The biggest unresolved issue is TTS licensing, not STT or the LLM runtime. If you want the first MVP to stay commercially safe, the exact local TTS voice/model asset must be chosen and verified on day 1.
+
+## Next Session Goal
+1. Add a concrete faster-whisper transcriber implementation.
+2. Update the UI flow to show `transcribing` after recording completes.
+3. Verify the exact dependency and model license details against the whitelist before locking the dependency into the shipped product.
 
 I saved the detailed version into session memory so it can be refined. If you want, the next step is either:
 
