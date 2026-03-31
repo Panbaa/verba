@@ -8,11 +8,12 @@ class TkinterWindow:
 		self._on_manual_trigger = on_manual_trigger
 		self._root = Tk()
 		self._root.title("Verba")
-		self._root.geometry("420x420")
+		self._root.geometry("520x520")
 
 		self._status = StringVar(value="idle")
 		self._transcript = StringVar(value="Waiting for input...")
 		self._response = StringVar(value="No response yet.")
+		self._diagnostics = StringVar(value="Recorder diagnostics will appear here.")
 
 		container = ttk.Frame(self._root, padding=16)
 		container.grid(sticky="nsew")
@@ -43,6 +44,11 @@ class TkinterWindow:
 			row=7, column=0, sticky="w", pady=(4, 0)
 		)
 
+		ttk.Label(container, text="Recorder Diagnostics").grid(row=8, column=0, sticky="w", pady=(12, 0))
+		ttk.Label(container, textvariable=self._diagnostics, wraplength=460, justify="left").grid(
+			row=9, column=0, sticky="w", pady=(4, 0)
+		)
+
 	def _handle_manual_trigger(self) -> None:
 		self._on_manual_trigger()
 
@@ -54,6 +60,12 @@ class TkinterWindow:
 
 	def show_response(self, response: str) -> None:
 		self._response.set(response)
+
+	def show_diagnostics(self, diagnostics: str) -> None:
+		self._diagnostics.set(diagnostics)
+
+	def call_soon(self, callback: Callable[[], None]) -> None:
+		self._root.after(0, callback)
 
 	def run(self) -> None:
 		self._root.mainloop()
