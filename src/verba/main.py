@@ -1,15 +1,35 @@
 from verba.frontend.tkinter.window import TkinterWindow
 from verba.trigger.manual_trigger import ManualTrigger
+from verba.audio.recorder import AudioRecorder
+from threading import Thread
 
+recorder = AudioRecorder()
 
 def main() -> None: 
-	trigger = ManualTrigger()
+	trigger_recording = ManualTrigger()
+	
+	def record_in_background() -> None:
+		try:
+			wav_bytes = recorder.record_wav(3.0)
+			window._root.after(0, lambda: on_recording_finished(wav_bytes))
+		except Exception as e:
+			window._root.after(0, lambda: on_recording_failed(e))
 
-	def handle_trigger() -> None:
+	def on_recording_finished(wav_bytes: bytes) -> None:
+		window.set_status("idle")
+		window.show_transcript("Recorded audio captured.")
+		window.show_response(f"Captured audio length: {len(wav_bytes)} bytes.")
+
+	def on_recording_failed(e: Exception) -> None:
+		window.set_status("idle")
+		window.show_transcript(f"Recording failed: {e}")
+		window.show_response("")
+
+	def handle_trigger_recording() -> None:
 		window.set_status("recording")
-		window.show_transcript("Manual trigger fired. Recorder not connected yet.")
-		window.show_response("Next step: connect audio capture in the trigger callback.")
+		window.show_transcript("Listening...")
+		Thread(target=record_in_background, daemon=True).start()
 
-	window = TkinterWindow(on_manual_trigger=trigger.fire)
-	trigger.start(handle_trigger)
+	window = TkinterWindow(on_manual_trigger=trigger_recording.fire)
+	trigger_recording.start(handle_trigger_recording)
 	window.run()

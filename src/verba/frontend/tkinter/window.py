@@ -8,7 +8,7 @@ class TkinterWindow:
 		self._on_manual_trigger = on_manual_trigger
 		self._root = Tk()
 		self._root.title("Verba")
-		self._root.geometry("420x220")
+		self._root.geometry("420x420")
 
 		self._status = StringVar(value="idle")
 		self._transcript = StringVar(value="Waiting for input...")
